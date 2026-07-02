@@ -10,10 +10,20 @@ class Loaded extends ExpenseState {
   final List<Expense> expenses;
 
   Loaded(this.expenses);
+
+  double get totalAmount {
+    return expenses.fold(0.0, (sum, item) => sum + item.amount);
+  }
 }
 
 class Error extends ExpenseState {
   final String errMsg;
 
   Error(this.errMsg);
+}
+
+class ExpenseOperationSuccess extends ExpenseState {
+  final String message;
+
+  ExpenseOperationSuccess(this.message);
 }

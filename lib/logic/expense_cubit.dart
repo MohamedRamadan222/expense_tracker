@@ -12,7 +12,6 @@ class ExpenseCubit extends Cubit<ExpenseState> {
     emit(Loading());
     try {
       final expenses = repository.getAll();
-
       emit(Loaded(expenses));
     } catch (e) {
       emit(Error(e.toString()));
@@ -22,9 +21,7 @@ class ExpenseCubit extends Cubit<ExpenseState> {
   Future<void> addExpense(Expense expense) async {
     try {
       await repository.addExpense(expense);
-
-      final expenses = repository.getAll();
-      emit(Loaded(expenses));
+      await getAllData();
     } catch (e) {
       emit(Error(e.toString()));
     }
@@ -33,9 +30,7 @@ class ExpenseCubit extends Cubit<ExpenseState> {
   Future<void> updateExpense(int index, Expense expense) async {
     try {
       await repository.updateExpense(index, expense);
-
-      final expenses = repository.getAll();
-      emit(Loaded(expenses));
+      await getAllData();
     } catch (e) {
       emit(Error(e.toString()));
     }
@@ -44,10 +39,7 @@ class ExpenseCubit extends Cubit<ExpenseState> {
   Future<void> deleteExpense(int index) async {
     try {
       await repository.deleteExpense(index);
-
-      final expenses = repository.getAll();
-
-      emit(Loaded(expenses));
+      await getAllData();
     } catch (e) {
       emit(Error(e.toString()));
     }
