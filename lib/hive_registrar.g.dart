@@ -8,11 +8,13 @@ import 'package:expense_tracker_app/data/models/expanse_model.dart';
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(ExpenseAdapter());
+    registerAdapter(TransactionTypeAdapter());
   }
 }
 
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
     registerAdapter(ExpenseAdapter());
+    registerAdapter(TransactionTypeAdapter());
   }
 }

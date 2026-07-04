@@ -20,15 +20,18 @@ class ExpenseAdapter extends TypeAdapter<Expense> {
       id: fields[0] as String,
       amount: (fields[1] as num).toDouble(),
       date: fields[2] as DateTime,
-      note: fields[3] as String?,
-      createdAt: fields[4] as DateTime,
+      createdAt: fields[3] as DateTime,
+      note: fields[4] as String,
+      type: fields[5] == null
+          ? TransactionType.expense
+          : fields[5] as TransactionType,
     );
   }
 
   @override
   void write(BinaryWriter writer, Expense obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -36,9 +39,11 @@ class ExpenseAdapter extends TypeAdapter<Expense> {
       ..writeByte(2)
       ..write(obj.date)
       ..writeByte(3)
-      ..write(obj.note)
+      ..write(obj.createdAt)
       ..writeByte(4)
-      ..write(obj.createdAt);
+      ..write(obj.note)
+      ..writeByte(5)
+      ..write(obj.type);
   }
 
   @override
@@ -48,6 +53,43 @@ class ExpenseAdapter extends TypeAdapter<Expense> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is ExpenseAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class TransactionTypeAdapter extends TypeAdapter<TransactionType> {
+  @override
+  final typeId = 1;
+
+  @override
+  TransactionType read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return TransactionType.income;
+      case 1:
+        return TransactionType.expense;
+      default:
+        return TransactionType.income;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, TransactionType obj) {
+    switch (obj) {
+      case TransactionType.income:
+        writer.writeByte(0);
+      case TransactionType.expense:
+        writer.writeByte(1);
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TransactionTypeAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

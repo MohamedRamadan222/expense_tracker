@@ -11,8 +11,20 @@ class Loaded extends ExpenseState {
 
   Loaded(this.expenses);
 
-  double get totalAmount {
-    return expenses.fold(0.0, (sum, item) => sum + item.amount);
+  double get totalIncome {
+    return expenses
+        .where((item) => item.type == TransactionType.income)
+        .fold(0, (sum, item) => sum + item.amount);
+  }
+
+  double get totalExpense {
+    return expenses
+        .where((item) => item.type == TransactionType.expense)
+        .fold(0, (sum, item) => sum + item.amount);
+  }
+
+  double get balance {
+    return totalIncome - totalExpense;
   }
 }
 
@@ -20,10 +32,4 @@ class Error extends ExpenseState {
   final String errMsg;
 
   Error(this.errMsg);
-}
-
-class ExpenseOperationSuccess extends ExpenseState {
-  final String message;
-
-  ExpenseOperationSuccess(this.message);
 }

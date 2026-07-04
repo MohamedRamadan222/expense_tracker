@@ -1,29 +1,43 @@
-import 'package:hive_ce/hive_ce.dart';
+import 'package:hive_ce/hive.dart';
 
 part 'expanse_model.g.dart';
 
-@HiveType(typeId: 0)
-class Expense extends HiveObject {
+
+@HiveType(typeId: 1)
+enum TransactionType {
   @HiveField(0)
-  String id;
+  income,
 
   @HiveField(1)
-  double amount;
+  expense,
+}
+
+@HiveType(typeId: 0)
+class Expense {
+  @HiveField(0)
+  final String id;
+
+  @HiveField(1)
+  final double amount;
 
   @HiveField(2)
-  DateTime date;
+  final DateTime date;
 
   @HiveField(3)
-  String? note;
+  final DateTime createdAt;
 
   @HiveField(4)
-  DateTime createdAt;
+  final String note;
+
+  @HiveField(5, defaultValue: TransactionType.expense)
+  final TransactionType type;
 
   Expense({
     required this.id,
     required this.amount,
     required this.date,
-    this.note,
     required this.createdAt,
+    required this.note,
+    required this.type,
   });
 }
